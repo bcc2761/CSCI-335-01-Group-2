@@ -1,11 +1,12 @@
 import pandas as pd
-import numpy as np
 from ucimlrepo import fetch_ucirepo
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
+from imblearn.over_sampling import SMOTE
 
 DATASET_ID = 350
+RANDOM_STATE = 35
 
 def download_dataset():
   """
@@ -71,7 +72,7 @@ def clean_categorical_features(X):
   print("\nCategorical features cleaned.")
   return X_cleaned
 
-def get_train_test_split(X, y, test_size=0.2, random_state=35):
+def get_train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE):
   """
   Splits the dataset into training and testing sets.
   
@@ -128,6 +129,36 @@ def scale_features(X_train, X_test):
 
   return X_train_scaled, X_test_scaled
 
+def apply_smote(X_train, y_train, random_state=RANDOM_STATE):
+  """
+  Applies SMOTE to balance the training dataset.
+  
+  Args:
+    X_train (pd.DataFrame): Training features.
+    y_train (pd.Series): Training target.
+    random_state (int): Random seed for reproducibility.
+  
+  Returns:
+    X_resampled (pd.DataFrame): Resampled training features.
+
+    y_resampled (pd.DataFrame): Resampled training target.
+  """
+  smote = SMOTE(random_state=random_state)
+  X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
+
+  X_resampled = pd.DataFrame(X_resampled, columns=X_train.columns)
+  y_resampled = pd.DataFrame(y_resampled, columns=y_train.columns)
+  
+  print("\n===== SMOTE Applied =====")
+  print(f"Original training set size: {X_train.shape[0]}")
+  print(f"Resampled training set size: {X_resampled.shape[0]}")
+  print(f"\nOriginal default rate: {y_train.values.mean():.2%}")
+  print(f"Resampled default rate: {y_resampled.values.mean():.2%}")
+  print(f"\nOriginal distribution: {y_train.value_counts().to_dict()}")
+  print(f"Resampled distribution: {y_resampled.value_counts().to_dict()}")
+  
+  return X_resampled, y_resampled
+
 def visualize_dataset(X, y, save_path='./data/dataset_overview.png'):
   """
     Create visualizations of the dataset.
@@ -168,7 +199,7 @@ def visualize_dataset(X, y, save_path='./data/dataset_overview.png'):
   
   print(f"\nDataset visualization saved to {save_path}")
 
-def preprocess_data(scale=True, test_size=0.2, random_state=35, visualize=True, explore=True):
+def preprocess_data(scale=True, test_size=0.2, random_state=RANDOM_STATE, visualize=True, explore=True, smote=True):
   """
   Main function to preprocess the Default of Credit Card Clients Dataset.
   
@@ -178,6 +209,7 @@ def preprocess_data(scale=True, test_size=0.2, random_state=35, visualize=True, 
     random_state (int): Random seed for reproducibility.
     visualize (bool): Whether to create visualizations of the dataset.
     explore (bool): Whether to display dataset information.
+    smote (bool): Whether to apply SMOTE to balance the training dataset.
   
   Returns:
     X_train (pd.DataFrame): Preprocessed training features.
@@ -209,10 +241,15 @@ def preprocess_data(scale=True, test_size=0.2, random_state=35, visualize=True, 
   # 5. Scale features
   if scale:
     X_train, X_test = scale_features(X_train, X_test)
+
+  # 6. Apply SMOTE
+  if smote:
+    X_train, y_train = apply_smote(X_train, y_train, random_state)
   
-  # 6. Visualize dataset
+  # 7. Visualize dataset
   if visualize:
     visualize_dataset(X, y)
+    visualize_dataset(X_train, y_train, save_path='./data/train_dataset_overview.png')
 
   print("\n" + "=" * 30)
   print("Preprocessing Completed")
