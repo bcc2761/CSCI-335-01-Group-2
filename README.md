@@ -1,11 +1,11 @@
-# CSCI 335 Machine Learning Project
+# CSCI 335 Machine Learning Project - Group 2
 
 ## Abstract
 This repository contains the machine learning project for CSCI 335. The project demonstrates the application of machine learning techniques to solve real-world problems, showcasing implementation of various ML algorithms, data processing pipelines, and model evaluation methodologies.
 
 ## Team Members
-- **Bennett C.** - Project Lead, Model Development
-- **Austin K.** - Data Processing, Testing
+- **Bennett C.**
+- **Austin K.**
 
 ## How to Run the Project
 
