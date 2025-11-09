@@ -128,7 +128,7 @@ def scale_features(X_train, X_test):
 
   return X_train_scaled, X_test_scaled
 
-def visualize_dataset(X, y, save_path='dataset_overview.png'):
+def visualize_dataset(X, y, save_path='./data/dataset_overview.png'):
   """
     Create visualizations of the dataset.
     
