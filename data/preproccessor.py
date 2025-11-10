@@ -43,7 +43,7 @@ def show_dataset_info(X, y):
   print(f"Default rate: {y.values.mean():.2%}")
 
   print("\n===== Missing Values =====")
-  print(f"Total mussing values: {X.isnull().sum().sum()}")
+  print(f"Total missing values: {X.isnull().sum().sum()}")
 
   print("\n===== Statistical Summary =====")
   print(X.describe())
