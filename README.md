@@ -32,3 +32,8 @@ Instructions for running the project will be added as implementations are comple
 - `code/` - All scripts, notebooks, and implementations
 - `resources/` - Research papers, reference links, notes, and presentation slides
 - `data/` - Datasets and pre-trained models
+
+### Models Used:
+- Logistic Regression
+- Random Forest
+- MLP (Multilayer Perceptron)
