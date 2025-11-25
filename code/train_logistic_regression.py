@@ -3,6 +3,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
 import joblib
 import os
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 # Import 'preprocessor.py' assuming it is in the same 'code/' directory
 try:
@@ -32,8 +34,7 @@ def train_model(X_train, y_train):
     model = LogisticRegression(random_state=RANDOM_STATE, max_iter=1000)
     
     # Train the model
-    # We use .values.ravel() to convert the y_train DataFrame back to a 1D array,
-    # which scikit-learn's fit() method expects.
+    # Use .values.ravel() to convert the y_train DataFrame back to a 1D array
     model.fit(X_train, y_train.values.ravel())
     
     print("Model training complete.")
@@ -80,11 +81,27 @@ def save_model(model, path="models/logistic_regression.joblib"):
     joblib.dump(model, path)
     print(f"\nModel saved to {path}")
 
+def plot_model(model, X_test, y_test, save_path='./data/logistic_regression_confusion_matrix.png'):
+    """
+    Plots and saves the confusion matrix for the model.
+    """
+    from sklearn.metrics import ConfusionMatrixDisplay
+
+    y_pred = model.predict(X_test)
+    cm_display = ConfusionMatrixDisplay.from_predictions(
+        y_test, y_pred, display_labels=['No Default (0)', 'Default (1)'], cmap=plt.cm.Blues, normalize='true'
+    )
+    cm_display.ax_.set_title('Logistic Regression Confusion Matrix (Normalized)')
+    
+    plt.savefig(save_path)
+    print(f"Confusion matrix saved to {save_path}")
+    plt.close()
+
 def main():
     """
     Main workflow for training and evaluating the model.
     """
-    # 1. Load and preprocess data
+    # 1. Load and preprocess data using script
     # We want scaling and SMOTE, but can turn off visualization
     # to keep the log clean during training.
     X_train, X_test, y_train, y_test = pp.preprocess_data(
@@ -102,6 +119,9 @@ def main():
     
     # 4. Save the model
     save_model(model)
+
+    # 5. Plot and save confusion matrix
+    plot_model(model, X_test, y_test)
 
 if __name__ == "__main__":
     main()

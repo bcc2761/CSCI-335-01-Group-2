@@ -113,7 +113,9 @@ def scale_features(X_train, X_test):
   """
   scaler = StandardScaler()
 
-  categorical_cols = ['SEX', 'EDUCATION', 'MARRIAGE']
+  categorical_cols = ['SEX', # 'SEX'
+                      'EDUCATION', # 'EDUCATION',
+                      'MARRIAGE'] # 'MARRIAGE']
   numeric_cols = [col for col in X_train.columns if col not in categorical_cols]
   
   # Create copies
@@ -259,5 +261,6 @@ def preprocess_data(scale=True, test_size=0.2, random_state=RANDOM_STATE, visual
   return X_train, X_test, y_train, y_test
 
 
-if __name__ == "__main__":  preprocess_data()
+if __name__ == "__main__":
+  preprocess_data()
 
