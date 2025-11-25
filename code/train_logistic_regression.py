@@ -84,7 +84,7 @@ def main():
     """
     Main workflow for training and evaluating the model.
     """
-    # 1. Load and preprocess data using your script
+    # 1. Load and preprocess data
     # We want scaling and SMOTE, but can turn off visualization
     # to keep the log clean during training.
     X_train, X_test, y_train, y_test = pp.preprocess_data(
